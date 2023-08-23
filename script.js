@@ -171,11 +171,10 @@ function updateInputs() {
   shapes.forEach((shape, index) => {
     const div = document.createElement("div");
 
-    if (shape.type === "bezier") {
-      const equation = generateBezierEquation(shape);
+    if (shape.type === "bezier" && index === 0) {
       div.innerHTML = `
                 <strong>Bezier ${index + 1}</strong><br>
-                Equation: x(t) = ${equation.x}, y(t) = ${equation.y} <br>
+                Code: Point start = new Point(${shape.startPoint.x}, ${shape.startPoint.y}), new QuadCurve(new Point(${shape.controlPoint.x}, ${shape.controlPoint.y}), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
                 Start: <input type="text" value="${
                   shape.startPoint.x
                 }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
@@ -192,11 +191,10 @@ function updateInputs() {
         shape.endPoint.y
       }" data-index="${index}" data-key="endPoint-y">
             `;
-    } else if (shape.type === "line") {
-      const equation = generateLineEquation(shape);
+    } else if (shape.type === "line" && index === 0) {
       div.innerHTML = `
                 <strong>Line ${index + 1}</strong><br>
-                Equation: x(t) = ${equation.x}, y(t) = ${equation.y} <br>
+                Code: Point start = new Point(${shape.startPoint.x}, ${shape.startPoint.y}), new Line(new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
                 Start: <input type="text" value="${
                   shape.startPoint.x
                 }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
@@ -209,9 +207,40 @@ function updateInputs() {
       }" data-index="${index}" data-key="endPoint-y">
             `;
     }
+
+    else if (shape.type === "bezier" && index != 0){
+      div.innerHTML = `
+                <strong>Bezier ${index + 1}</strong><br>
+                Code: Point start = new Point(${shape.startPoint.x}, ${shape.startPoint.y}), new QuadCurve(new Point(${shape.controlPoint.x}, ${shape.controlPoint.y}), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+                Control: <input type="text" value="${
+                  shape.controlPoint.x
+                }" data-index="${index}" data-key="controlPoint-x"> <input type="text" value="${
+        shape.controlPoint.y
+      }" data-index="${index}" data-key="controlPoint-y"><br>
+                End: <input type="text" value="${
+                  shape.endPoint.x
+                }" data-index="${index}" data-key="endPoint-x"> <input type="text" value="${
+        shape.endPoint.y
+      }" data-index="${index}" data-key="endPoint-y">
+            `;
+    }
+    else if (shape.type === "line" && index != 0){
+      div.innerHTML = `
+                <strong>Line ${index + 1}</strong><br>
+                Code: Point start = new Point(${shape.startPoint.x}, ${shape.startPoint.y}), new Line(new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+
+                End: <input type="text" value="${
+                  shape.endPoint.x
+                }" data-index="${index}" data-key="endPoint-x"> <input type="text" value="${
+        shape.endPoint.y
+      }" data-index="${index}" data-key="endPoint-y">
+            `;
+    }
+
     pointsData.appendChild(div);
   });
 }
+
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
