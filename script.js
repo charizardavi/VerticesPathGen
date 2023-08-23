@@ -125,6 +125,8 @@ function makeSmooth() {
       epsilon
     );
     console.log(currentShape);
+    shapes.splice(i, 1, currentShape); 
+
   }
   updateInputs();
   render();
