@@ -134,6 +134,7 @@ function calculateDerivative(curve, deltaT, pointType) {
     return 3;
   } else if (pointType == "end") {
     return 4;
+  }
 }
 
 function adjustControlPoint(controlPoint, startPointDerivative, endPointDerivative, nextCurveStartPointDerivative, epsilon) {
