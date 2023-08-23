@@ -115,6 +115,7 @@ function makeSmooth() {
 
     console.log(endPointDerivative);
     console.log(nextShapeStartPointDerivative);
+    console.log(currentShape);
 
     // Adjust the control point of the current curve to match derivatives
     currentShape.controlPoint = adjustControlPoint(
@@ -123,6 +124,7 @@ function makeSmooth() {
       nextShapeStartPointDerivative,
       epsilon
     );
+    console.log(currentShape);
   }
   updateInputs();
   render();
