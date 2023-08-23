@@ -14,13 +14,14 @@
     </form>
     <div id="knots-form"></div>
     <button type="button" id="generate-curve">Generate Curve</button>
-    <canvas id="canvas" width="400" height="400"></canvas>
+    <svg id="svg-container" width="400" height="400"></svg>
 
     <script>
         // JavaScript equivalent of EPointF class (same as before)
 
         const knots = [];
-        const canvas = document.getElementById("canvas");
+        const svgContainer = document.getElementById("svg-container");
+        const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
         // Function to expand the form based on the number of knots
@@ -47,27 +48,19 @@
             }
         });
 
-        // Function to compute the cubic Bezier path and plot it on the canvas
-        function updatePath() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+        // Function to compute the cubic Bezier path as SVG data
+        function computePath() {
             if (knots.length >= 4) {
-                ctx.beginPath();
-                ctx.strokeStyle = "blue";
-                ctx.lineWidth = 2;
-
-                ctx.moveTo(knots[0].x, knots[0].y);
+                let pathData = `M ${knots[0].x} ${knots[0].y}`;
 
                 for (let i = 1; i < knots.length - 2; i += 3) {
-                    ctx.bezierCurveTo(
-                        knots[i].x, knots[i].y,
-                        knots[i + 1].x, knots[i + 1].y,
-                        knots[i + 2].x, knots[i + 2].y
-                    );
+                    pathData += ` C ${knots[i].x} ${knots[i].y}, ${knots[i + 1].x} ${knots[i + 1].y}, ${knots[i + 2].x} ${knots[i + 2].y}`;
                 }
 
-                ctx.stroke();
+                return pathData;
             }
+
+            return "";
         }
 
         // Function to add knots based on user input
@@ -91,7 +84,39 @@
                 knots.push(new EPointF(x, y));
             }
 
-            updatePath();
+            // Compute the path as SVG data
+            const pathData = computePath();
+
+            // Display the SVG path
+            svgContainer.innerHTML = `<path d="${pathData}" stroke="blue" fill="none"/>`;
+
+            // Draw the cubic Bezier curve on the canvas
+            drawCurve();
+        }
+
+        // Function to draw the cubic Bezier curve on the canvas
+        function drawCurve() {
+            canvas.width = 400;
+            canvas.height = 400;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (knots.length >= 4) {
+                ctx.beginPath();
+                ctx.strokeStyle = "blue";
+                ctx.lineWidth = 2;
+
+                ctx.moveTo(knots[0].x, knots[0].y);
+
+                for (let i = 1; i < knots.length - 2; i += 3) {
+                    ctx.bezierCurveTo(
+                        knots[i].x, knots[i].y,
+                        knots[i + 1].x, knots[i + 1].y,
+                        knots[i + 2].x, knots[i + 2].y
+                    );
+                }
+
+                ctx.stroke();
+            }
         }
 
         // Handle form submission
