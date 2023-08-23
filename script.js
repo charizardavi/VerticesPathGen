@@ -106,21 +106,21 @@ function makeSmooth() {
   const epsilon = 10; 
 
   for (let i = 0; i < shapes.length - 1; i++) { // ignore last curve
-    let currentCurve = shapes[i];
-    let nextCurve = shapes[i + 1];
+    let currentShape = shapes[i];
+    let nextShape = shapes[i + 1];
 
     // Calculate relevant derivatives
-    let endPointDerivative = calculateDerivative(currentCurve, deltaT, "end");
-    let nextCurveStartPointDerivative = calculateDerivative(nextCurve, deltaT, "start");
+    let endPointDerivative = calculateDerivative(currentShape, deltaT, "end");
+    let nextShapeStartPointDerivative = calculateDerivative(nextShape, deltaT, "start");
 
     console.log(endPointDerivative);
     console.log(nextCurveStartPointDerivative);
 
     // Adjust the control point of the current curve to match derivatives
-    currentCurve.controlPoint = adjustControlPoint(
-      currentCurve.controlPoint,
+    currentShape.controlPoint = adjustControlPoint(
+      currentShape.controlPoint,
       endPointDerivative,
-      nextCurveStartPointDerivative,
+      nextShapeStartPointDerivative,
       epsilon
     );
   }
@@ -129,19 +129,18 @@ function makeSmooth() {
 }
 
 function calculateDerivative(curve, deltaT, pointType) {
-  if (pointType == "start") {
+  if (pointType === "start") {
     return 3;
-  } else if (pointType == "end") {
+  } else if (pointType === "end") {
     return 4;
   }
 }
 
-function adjustControlPoint(controlPoint, endPointDerivative, nextCurveStartPointDerivative, epsilon) {
-  
+function adjustControlPoint(controlPoint, endPointDerivative, nextShapeStartPointDerivative, epsilon) {
   // Adjust the control point to match the derivatives
-  if (endPointDerivative < nextCurveStartPointDerivative) {
+  if (endPointDerivative < nextShapeStartPointDerivative) {
     controlPoint.y -= epsilon; // Decrease y
-  } else if (endPointDerivative > nextCurveStartPointDerivative) {
+  } else if (endPointDerivative > nextShapeStartPointDerivative) {
     controlPoint.y += epsilon; // Increase y
   }
 }
