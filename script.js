@@ -102,8 +102,8 @@ function addShape(type) {
 }
 
 function makeSmooth() {
-  const deltaT = 0.001;
-  const epsilon = 10; 
+  let deltaT = 0.001;
+  let epsilon = 2; 
 
   for (let i = 0; i < shapes.length - 1; i++) { // ignore last curve
     let currentShape = shapes[i];
@@ -134,10 +134,29 @@ function makeSmooth() {
 
 function calculateDerivative(curve, deltaT, pointType) {
   if (pointType === "start") {
-    return 3;
-  } else if (pointType === "end") {
-    return 4;
+    t = 0;
+    deltaT = deltaT;
   }
+  if (pointType === "end") {
+    t = 1;
+    deltaT = -1 * deltaT;
+  }
+
+  if (curve.type === "bezier") {
+    const equation = generateBezierEquation(curve);
+  } else if (curve.type === "line") {
+    const equation = generateLineEquation(curve);
+  }
+    const x1 = eval(equation.x.replace(/t/g, t));
+    const x2 = eval(equation.x.replace(/t/g, t + deltaT));
+    const deltaX = (x2 - x1) / deltaT;
+    
+    const y1 = eval(equation.y.replace(/t/g, t));
+    const y2 = eval(equation.y.replace(/t/g, t + deltaT));
+    const deltaX = (y2 - y1) / deltaT;
+
+    const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+  return delta;
 }
 
 function adjustControlPoint(controlPoint, endPointDerivative, nextShapeStartPointDerivative, epsilon) {
