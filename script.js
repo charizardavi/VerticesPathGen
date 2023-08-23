@@ -142,6 +142,8 @@ function calculateDerivative(curve, deltaT, pointType) {
     deltaT = -1 * deltaT;
   }
 
+  console.log(curve.type);
+
   if (curve.type === "bezier") {
     const equation = generateBezierEquation(curve);
   } else if (curve.type === "line") {
