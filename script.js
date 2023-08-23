@@ -103,7 +103,7 @@ function addShape(type) {
 
 function makeSmooth() {
   let deltaT = 0.001;
-  let epsilon = 10;
+  let epsilon = .01;
   
   for (let i = 0; i < shapes.length - 1; i++) { // ignore last curve
     let currentShape = shapes[i];
