@@ -102,20 +102,19 @@ function addShape(type) {
 }
 
 function makeSmooth() {
-  const deltaT = 0.001; // Small delta t value
-  const epsilon = 10; // A small value for comparing derivatives
+  const deltaT = 0.001;
+  const epsilon = 10; 
 
-  for (let i = 1; i < shapes.length - 1; i++) {
+  for (let i = 0; i < shapes.length - 1; i++) { // ignore last curve
     const currentCurve = shapes[i];
     const nextCurve = shapes[i + 1];
 
-    // Calculate derivatives at the start and end points of the current curve
-    const startPointDerivative = calculateDerivative(currentCurve, deltaT, "start");
+    // Calculate relevant derivatives
     const endPointDerivative = calculateDerivative(currentCurve, deltaT, "end");
-
-    // Calculate derivatives at the start and end points of the next curve
     const nextCurveStartPointDerivative = calculateDerivative(nextCurve, deltaT, "start");
-    const nextCurveEndPointDerivative = calculateDerivative(nextCurve, deltaT, "end");
+
+    console.log(endPointDerivative);
+    console.log(nextCurveStartPointDerivative);
 
     // Adjust the control point of the current curve to match derivatives
     currentCurve.controlPoint = adjustControlPoint(
