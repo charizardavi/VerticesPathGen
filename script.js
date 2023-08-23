@@ -126,8 +126,7 @@ function makeSmooth() {
       epsilon
     );
   }
-
-  update_inputs();
+  updateInputs();
   render();
 }
 
