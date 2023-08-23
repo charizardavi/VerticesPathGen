@@ -10,6 +10,13 @@ h1 {
     position: relative;
 }
 
+#knots-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2; /* Ensure buttons and knots-list are above canvas and image */
+}
+
 #canvas {
     position: absolute;
     top: 0;
