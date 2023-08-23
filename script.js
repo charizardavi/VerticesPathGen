@@ -95,6 +95,23 @@ function addShape(type) {
       startPoint: { ...lastShape.endPoint },
       endPoint: newEndPoint,
     });
+  } else if (type === "cubicBezier") {
+    let newControlPoint1 = {
+      x: Math.min(Math.max(lastShape.endPoint.x + 25, -72), 72),
+      y: Math.min(Math.max(lastShape.endPoint.y - 25, -72), 72),
+    };
+    let newControlPoint2 = {
+      x: Math.min(Math.max(newEndPoint.x - 25, -72), 72),
+      y: Math.min(Math.max(newEndPoint.y + 25, -72), 72),
+    };
+
+    shapes.push({
+      type: "cubicBezier",
+      startPoint: { ...lastShape.endPoint },
+      controlPoint1: newControlPoint1,
+      controlPoint2: newControlPoint2,
+      endPoint: newEndPoint,
+    });
   }
 
   updateInputs();
@@ -110,7 +127,10 @@ canvas.addEventListener("mousedown", function (event) {
     const keys =
       shapes[i].type === "bezier"
         ? ["startPoint", "controlPoint", "endPoint"]
+        : shapes[i].type === "cubicBezier"
+        ? ["startPoint", "controlPoint1", "controlPoint2", "endPoint"]
         : ["startPoint", "endPoint"];
+    
     for (let key of keys) {
       if (i > 0 && key === "startPoint") continue;
       if (distance({ x, y }, convertToCanvasCoords(shapes[i][key])) < 10) {
@@ -174,7 +194,11 @@ function updateInputs() {
     if (shape.type === "bezier" && index === 0) {
       div.innerHTML = `
                 <strong>Bezier ${index + 1}</strong><br>
-                Code: Point start = new Point(${shape.startPoint.x}, ${shape.startPoint.y}), new QuadCurve(new Point(${shape.controlPoint.x}, ${shape.controlPoint.y}), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+                Code: Point start = new Point(${shape.startPoint.x}, ${
+        shape.startPoint.y
+      }), new QuadCurve(new Point(${shape.controlPoint.x}, ${
+        shape.controlPoint.y
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
                 Start: <input type="text" value="${
                   shape.startPoint.x
                 }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
@@ -194,7 +218,11 @@ function updateInputs() {
     } else if (shape.type === "line" && index === 0) {
       div.innerHTML = `
                 <strong>Line ${index + 1}</strong><br>
-                Code: Point start = new Point(${shape.startPoint.x}, ${shape.startPoint.y}), new Line(new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+                Code: Point start = new Point(${shape.startPoint.x}, ${
+        shape.startPoint.y
+      }), new Line(new Point(${shape.endPoint.x}, ${
+        shape.endPoint.y
+      }), time) <br>
                 Start: <input type="text" value="${
                   shape.startPoint.x
                 }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
@@ -206,12 +234,14 @@ function updateInputs() {
         shape.endPoint.y
       }" data-index="${index}" data-key="endPoint-y">
             `;
-    }
-
-    else if (shape.type === "bezier" && index != 0){
+    } else if (shape.type === "bezier" && index != 0) {
       div.innerHTML = `
                 <strong>Bezier ${index + 1}</strong><br>
-                Code: Point start = new Point(${shape.startPoint.x}, ${shape.startPoint.y}), new QuadCurve(new Point(${shape.controlPoint.x}, ${shape.controlPoint.y}), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+                Code: Point start = new Point(${shape.startPoint.x}, ${
+        shape.startPoint.y
+      }), new QuadCurve(new Point(${shape.controlPoint.x}, ${
+        shape.controlPoint.y
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
                 Control: <input type="text" value="${
                   shape.controlPoint.x
                 }" data-index="${index}" data-key="controlPoint-x"> <input type="text" value="${
@@ -223,11 +253,14 @@ function updateInputs() {
         shape.endPoint.y
       }" data-index="${index}" data-key="endPoint-y">
             `;
-    }
-    else if (shape.type === "line" && index != 0){
+    } else if (shape.type === "line" && index != 0) {
       div.innerHTML = `
                 <strong>Line ${index + 1}</strong><br>
-                Code: Point start = new Point(${shape.startPoint.x}, ${shape.startPoint.y}), new Line(new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+                Code: Point start = new Point(${shape.startPoint.x}, ${
+        shape.startPoint.y
+      }), new Line(new Point(${shape.endPoint.x}, ${
+        shape.endPoint.y
+      }), time) <br>
 
                 End: <input type="text" value="${
                   shape.endPoint.x
@@ -235,12 +268,37 @@ function updateInputs() {
         shape.endPoint.y
       }" data-index="${index}" data-key="endPoint-y">
             `;
+    } else if (shape.type === "cubicBezier") {
+      div.innerHTML = `
+      <strong>Cubic Bezier ${index + 1}</strong><br>
+      Code: Point start = new Point(${shape.startPoint.x}, ${
+        shape.startPoint.y
+      }), new CubicCurve(new Point(${shape.controlPoint1.x}, ${
+        shape.controlPoint1.y
+      }), new Point(${shape.controlPoint2.x}, ${
+        shape.controlPoint2.y
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+      Control1: <input type="text" value="${
+        shape.controlPoint1.x
+      }" data-index="${index}" data-key="controlPoint1-x"> <input type="text" value="${
+        shape.controlPoint1.y
+      }" data-index="${index}" data-key="controlPoint1-y"><br>
+      Control2: <input type="text" value="${
+        shape.controlPoint2.x
+      }" data-index="${index}" data-key="controlPoint2-x"> <input type="text" value="${
+        shape.controlPoint2.y
+      }" data-index="${index}" data-key="controlPoint2-y"><br>
+      End: <input type="text" value="${
+        shape.endPoint.x
+      }" data-index="${index}" data-key="endPoint-x"> <input type="text" value="${
+        shape.endPoint.y
+      }" data-index="${index}" data-key="endPoint-y">
+      `;
     }
 
     pointsData.appendChild(div);
   });
 }
-
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -287,6 +345,28 @@ function render() {
       ctx.beginPath();
       ctx.arc(endX, endY, 5, 0, 2 * Math.PI);
       ctx.fill();
+    } else if (shape.type === "cubicBezier") {
+      ctx.beginPath();
+      ctx.moveTo(...Object.values(convertToCanvasCoords(shape.startPoint)));
+      ctx.bezierCurveTo(
+        ...Object.values(convertToCanvasCoords(shape.controlPoint1)),
+        ...Object.values(convertToCanvasCoords(shape.controlPoint2)),
+        ...Object.values(convertToCanvasCoords(shape.endPoint))
+      );
+      ctx.stroke();
+
+      ctx.fillStyle = colors[index % colors.length];
+      for (let point of [
+        shape.startPoint,
+        shape.controlPoint1,
+        shape.controlPoint2,
+        shape.endPoint,
+      ]) {
+        const { x, y } = convertToCanvasCoords(point);
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
     }
   });
 }
@@ -327,6 +407,12 @@ document
 document
   .getElementById("addLine")
   .addEventListener("click", () => addShape("line"));
+
+document
+  .getElementById("addCubicBezier")
+  .addEventListener("click", function () {
+    addShape("cubicBezier");
+  });
 
 updateInputs();
 render();
