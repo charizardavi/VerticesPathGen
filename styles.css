@@ -1,36 +1,19 @@
 body {
     font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
 }
 
-h1 {
-    text-align: center;
+canvas {
+    border: 1px solid black;
 }
 
-#canvas-container {
-    position: relative;
+#controls {
+    margin-top: 20px;
 }
 
-#knots-list {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2; /* Ensure buttons and knots-list are above canvas and image */
-}
-
-#canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-}
-
-#background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    opacity: 0.7;
-    pointer-events: none;
-    max-width: 100%; /* Set the maximum width */
-    max-height: 100%; /* Set the maximum height */
+#pointsData {
+    margin-top: 10px;
 }
