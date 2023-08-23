@@ -103,8 +103,7 @@ function addShape(type) {
 
 function makeSmooth() {
   let deltaT = 0.001;
-  let epsilon = 2; 
-
+  
   for (let i = 0; i < shapes.length - 1; i++) { // ignore last curve
     let currentShape = shapes[i];
     let nextShape = shapes[i + 1];
@@ -113,16 +112,11 @@ function makeSmooth() {
     let endPointDerivative = calculateDerivative(currentShape, deltaT, "end");
     let nextShapeStartPointDerivative = calculateDerivative(nextShape, deltaT, "start");
 
-    console.log(endPointDerivative);
-    console.log(nextShapeStartPointDerivative);
-    console.log(currentShape);
-
     // Adjust the control point of the current curve to match derivatives
     currentShape.controlPoint = adjustControlPoint(
       currentShape.controlPoint,
       endPointDerivative,
-      nextShapeStartPointDerivative,
-      epsilon
+      nextShapeStartPointDerivative
     );
     console.log(currentShape);
     shapes.splice(i, 1, currentShape); 
@@ -174,17 +168,21 @@ function calculateDerivative(curve, deltaT, pointType) {
   const deltaY = (y2 - y1) / change;
   
   const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
-  return delta;
+  return {
+    x: deltaX,
+    y: deltaY,
+    total: delta,
+  };
 }
 
-function adjustControlPoint(controlPoint, endPointDerivative, nextShapeStartPointDerivative, epsilon) {
+function adjustControlPoint(controlPoint, endPointDerivative, nextShapeStartPointDerivative) {
   // Adjust the control point to match the derivatives
-  if (endPointDerivative < nextShapeStartPointDerivative) {
-    controlPoint.y -= epsilon; 
-    controlPoint.x += epsilon;
+  if (endPointDerivative.total < nextShapeStartPointDerivative.total) {
+    controlPoint.y -= Math.abs(endPointDerivative.y - nextShapeStartPointDerivative.y); 
+    controlPoint.x += Math.abs(endPointDerivative.x - nextShapeStartPointDerivative.x);
   } else if (endPointDerivative > nextShapeStartPointDerivative) {
-    controlPoint.y += epsilon; 
-    controlPoint.x -= epsilon; 
+    controlPoint.y += Math.abs(endPointDerivative.y - nextShapeStartPointDerivative.y); 
+    controlPoint.x -= Math.abs(endPointDerivative.x - nextShapeStartPointDerivative.x); 
   }
   return controlPoint;
 }
