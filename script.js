@@ -119,7 +119,6 @@ function makeSmooth() {
     // Adjust the control point of the current curve to match derivatives
     currentCurve.controlPoint = adjustControlPoint(
       currentCurve.controlPoint,
-      startPointDerivative,
       endPointDerivative,
       nextCurveStartPointDerivative,
       epsilon
@@ -137,7 +136,7 @@ function calculateDerivative(curve, deltaT, pointType) {
   }
 }
 
-function adjustControlPoint(controlPoint, startPointDerivative, endPointDerivative, nextCurveStartPointDerivative, epsilon) {
+function adjustControlPoint(controlPoint, endPointDerivative, nextCurveStartPointDerivative, epsilon) {
   
   // Adjust the control point to match the derivatives
   if (endPointDerivative < nextCurveStartPointDerivative) {
