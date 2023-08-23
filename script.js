@@ -169,9 +169,6 @@ function calculateDerivative(curve, deltaT, pointType) {
   const x2 = eval(equation.x);
   const y2 = eval(equation.y);
 
-  const x2 = xFn(init + change);
-  const y2 = yFn(init + change);
-
   const deltaX = (x2 - x1) / change;
   const deltaY = (y2 - y1) / change;
   
