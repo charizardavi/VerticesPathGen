@@ -140,17 +140,33 @@ function appendCurveToPath(pathArray, control1, control2, targetKnot) {
 
 const knots = [];
 
-// Function to compute the cubic Bezier path and update the SVG
-function updatePath() {
-    const pathData = computePathThroughKnots(knots);
-    const svg = document.getElementById("curve-container");
-    svg.innerHTML = ""; // Clear previous paths
+// JavaScript equivalent of EPointF class (same as before)
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", pathData);
-    path.setAttribute("stroke", "blue");
-    path.setAttribute("fill", "none");
-    svg.appendChild(path);
+const knots = [];
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+// Function to compute the cubic Bezier path and plot it on the canvas
+function updatePath() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (knots.length >= 4) {
+        ctx.beginPath();
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+
+        ctx.moveTo(knots[0].x, knots[0].y);
+
+        for (let i = 1; i < knots.length - 2; i += 3) {
+            ctx.bezierCurveTo(
+                knots[i].x, knots[i].y,
+                knots[i + 1].x, knots[i + 1].y,
+                knots[i + 2].x, knots[i + 2].y
+            );
+        }
+
+        ctx.stroke();
+    }
 }
 
 // Add a knot based on user input
@@ -176,6 +192,7 @@ document.getElementById("add-knot").addEventListener("click", addKnot);
 
 // Compute and display the initial path
 updatePath();
+
 // Compute the path
 const pathData = computePathThroughKnots(knots);
 
