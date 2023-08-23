@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cubic Bezier Curve Generator</title>
+    <title>Bezier Curve Editor</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Cubic Bezier Curve Generator</h1>
-    <div id="canvas-container">
-        <canvas id="canvas" width="144" height="144"></canvas>
-        <img id="background-image" src="background.png" alt="Background Image">
+    <canvas id="bezierCanvas" width="500" height="500"></canvas>
+    <div id="controls">
+        <button id="addBezier">Add Bezier</button>
+        <button id="addLine">Add Line</button>
+        <div id="pointsData"></div>
     </div>
     <script src="script.js"></script>
 </body>
