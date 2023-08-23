@@ -87,12 +87,19 @@ function updateKnotPosition(index, x, y) {
 }
 
 function drawKnots() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
     ctx.fillStyle = "red";
+    ctx.strokeStyle = "black";
 
     for (let i = 0; i < knots.length; i++) {
+        const knot = knots[i];
         ctx.beginPath();
-        ctx.arc(knots[i].x, knots[i].y, 5, 0, Math.PI * 2);
+        ctx.arc(knot.x, knot.y, 5, 0, Math.PI * 2);
         ctx.fill();
+        ctx.stroke();
     }
 }
 
