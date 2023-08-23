@@ -292,12 +292,72 @@ function generateLineEquation(line) {
     y: eqY,
   };
 }
+
+function makeSmooth() {
+  const deltaT = 0.001; // Small delta t value
+  const epsilon = 0.0001; // A small value for comparing derivatives
+
+  for (let i = 1; i < shapes.length - 1; i++) {
+    const currentCurve = shapes[i];
+    const nextCurve = shapes[i + 1];
+
+    // Calculate derivatives at the start and end points of the current curve
+    const startPointDerivative = calculateDerivative(currentCurve, deltaT, "start");
+    const endPointDerivative = calculateDerivative(currentCurve, deltaT, "end");
+
+    // Calculate derivatives at the start and end points of the next curve
+    const nextCurveStartPointDerivative = calculateDerivative(nextCurve, deltaT, "start");
+    const nextCurveEndPointDerivative = calculateDerivative(nextCurve, deltaT, "end");
+
+    // Adjust the control point of the current curve to match derivatives
+    currentCurve.controlPoint = adjustControlPoint(
+      currentCurve.controlPoint,
+      startPointDerivative,
+      endPointDerivative,
+      nextCurveStartPointDerivative,
+      epsilon
+    );
+  }
+
+  // Redraw the canvas with the adjusted curves
+  render();
+}
+
+function calculateDerivative(curve, deltaT, pointType) {
+  const t = pointType === "start" ? deltaT : 1 - deltaT;
+  const equation = curve.type === "bezier" ? generateBezierEquation(curve) : generateLineEquation(curve);
+  const x = eval(equation.x.replace(/t/g, t));
+  const y = eval(equation.y.replace(/t/g, t));
+  return { x, y };
+}
+
+function adjustControlPoint(controlPoint, startPointDerivative, endPointDerivative, nextCurveStartPointDerivative, epsilon) {
+  // Adjust the control point to match the derivatives
+  const adjustedControlPoint = {
+    x: controlPoint.x + (endPointDerivative.x - startPointDerivative.x) * epsilon,
+    y: controlPoint.y + (endPointDerivative.y - startPointDerivative.y) * epsilon
+  };
+
+  // Check if adjusting the control point caused a significant change in the next curve's start point derivative
+  if (Math.abs(nextCurveStartPointDerivative.x - adjustedControlPoint.x) > epsilon ||
+      Math.abs(nextCurveStartPointDerivative.y - adjustedControlPoint.y) > epsilon) {
+    // If so, revert the adjustment
+    return controlPoint;
+  }
+
+  return adjustedControlPoint;
+}
+
 document
   .getElementById("addBezier")
   .addEventListener("click", () => addShape("bezier"));
 document
   .getElementById("addLine")
   .addEventListener("click", () => addShape("line"));
+
+document
+  .getElementById("makeSmooth")
+  .addEventListener("click", () => makeSmooth());
 
 updateInputs();
 render();
