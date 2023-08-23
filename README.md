@@ -1,4 +1,5 @@
 # This is the Vertices path generator
 
-Simply drag around the three points, the start, end, and control, to generate the desired trajectory, and use the function generated below in your code!
+Use the buttons to add different trajectories, and drag around their start, end, and control points to achieve the desired path. You can then use the code inside your vertices opmode!
+
 Use it at https://verticespathgen.vercel.app
