@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bezier Curve Editor</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Cubic Bezier Curve Generator</title>
 </head>
 <body>
-    <canvas id="bezierCanvas" width="500" height="500"></canvas>
-    <div id="controls">
-        <button id="addBezier">Add Bezier</button>
-        <button id="addLine">Add Line</button>
-        <div id="pointsData"></div>
-    </div>
+    <h1>Cubic Bezier Curve Generator</h1>
+    <form id="input-form">
+        <label for="x">X-coordinate:</label>
+        <input type="number" id="x" required>
+        <label for="y">Y-coordinate:</label>
+        <input type="number" id="y" required>
+        <button type="button" id="add-knot">Add Knot</button>
+    </form>
+    <svg id="curve-container" width="400" height="400"></svg>
+
     <script src="script.js"></script>
 </body>
 </html>
