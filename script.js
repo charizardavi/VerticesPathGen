@@ -360,7 +360,7 @@ function drawAxis() {
 
 function generateBezierEquation(bezier) {
   const eqX = `(1-t)**2 * (${bezier.startPoint.x}) + 2 * (1-t)*t*(${bezier.controlPoint.x}) + t**2 * (${bezier.endPoint.x})`;
-  const eqY = `(1-t)**2 * (${bezier.startPoint.y}) + 2 * (1-t) * t(${bezier.controlPoint.y}) + t**2 * (${bezier.endPoint.y})`;
+  const eqY = `(1-t)**2 * (${bezier.startPoint.y}) + 2 * (1-t)*t*(${bezier.controlPoint.y}) + t**2 * (${bezier.endPoint.y})`;
   return {
     x: eqX,
     y: eqY,
