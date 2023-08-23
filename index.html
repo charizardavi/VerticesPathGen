@@ -7,15 +7,95 @@
 </head>
 <body>
     <h1>Cubic Bezier Curve Generator</h1>
-    <form id="input-form">
-        <label for="x">X-coordinate:</label>
-        <input type="number" id="x" required>
-        <label for="y">Y-coordinate:</label>
-        <input type="number" id="y" required>
-        <button type="button" id="add-knot">Add Knot</button>
+    <form>
+        <label for="num-knots">Number of Knots:</label>
+        <input type="number" id="num-knots" min="2" required>
+        <button type="button" id="expand-form">Expand Form</button>
     </form>
-    <svg id="curve-container" width="400" height="400"></svg>
+    <div id="knots-form"></div>
+    <button type="button" id="generate-curve">Generate Curve</button>
+    <canvas id="canvas" width="400" height="400"></canvas>
 
-    <script src="script.js"></script>
+    <script>
+        // JavaScript equivalent of EPointF class (same as before)
+
+        const knots = [];
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Function to expand the form based on the number of knots
+        document.getElementById("expand-form").addEventListener("click", () => {
+            const numKnotsInput = document.getElementById("num-knots");
+            const numKnots = parseInt(numKnotsInput.value);
+
+            if (!isNaN(numKnots) && numKnots >= 2) {
+                const knotsForm = document.getElementById("knots-form");
+                knotsForm.innerHTML = ""; // Clear previous form content
+
+                for (let i = 0; i < numKnots; i++) {
+                    const div = document.createElement("div");
+                    div.innerHTML = `
+                        <label for="knot-x-${i}">Knot ${i + 1} X:</label>
+                        <input type="number" id="knot-x-${i}" required>
+                        <label for="knot-y-${i}">Knot ${i + 1} Y:</label>
+                        <input type="number" id="knot-y-${i}" required>
+                    `;
+                    knotsForm.appendChild(div);
+                }
+            } else {
+                alert("Please enter a valid number of knots (minimum 2).");
+            }
+        });
+
+        // Function to compute the cubic Bezier path and plot it on the canvas
+        function updatePath() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (knots.length >= 4) {
+                ctx.beginPath();
+                ctx.strokeStyle = "blue";
+                ctx.lineWidth = 2;
+
+                ctx.moveTo(knots[0].x, knots[0].y);
+
+                for (let i = 1; i < knots.length - 2; i += 3) {
+                    ctx.bezierCurveTo(
+                        knots[i].x, knots[i].y,
+                        knots[i + 1].x, knots[i + 1].y,
+                        knots[i + 2].x, knots[i + 2].y
+                    );
+                }
+
+                ctx.stroke();
+            }
+        }
+
+        // Function to add knots based on user input
+        function addKnots() {
+            knots.length = 0; // Clear previous knots
+
+            const numKnotsInput = document.getElementById("num-knots");
+            const numKnots = parseInt(numKnotsInput.value);
+
+            for (let i = 0; i < numKnots; i++) {
+                const xInput = document.getElementById(`knot-x-${i}`);
+                const yInput = document.getElementById(`knot-y-${i}`);
+                const x = parseFloat(xInput.value);
+                const y = parseFloat(yInput.value);
+
+                if (isNaN(x) || isNaN(y)) {
+                    alert("Please enter valid coordinates for all knots.");
+                    return;
+                }
+
+                knots.push(new EPointF(x, y));
+            }
+
+            updatePath();
+        }
+
+        // Handle form submission
+        document.getElementById("generate-curve").addEventListener("click", addKnots);
+    </script>
 </body>
 </html>
