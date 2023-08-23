@@ -118,6 +118,94 @@ function addShape(type) {
   render();
 }
 
+function makeSmooth() {
+  let deltaT = 0.001;
+  let epsilon = .01;
+  
+  for (let i = 0; i < shapes.length - 1; i++) { // ignore last curve
+    let currentShape = shapes[i];
+    let nextShape = shapes[i + 1];
+
+    // Calculate relevant derivatives
+    let endPointDerivative = calculateDerivative(currentShape, deltaT, "end");
+    let nextShapeStartPointDerivative = calculateDerivative(nextShape, deltaT, "start");
+
+    console.log(endPointDerivative);
+    console.log(nextShapeStartPointDerivative);
+
+    // Adjust the control point of the current curve to match derivatives
+    currentShape.controlPoint = adjustControlPoint(
+      currentShape.controlPoint,
+      endPointDerivative,
+      nextShapeStartPointDerivative,
+      epsilon
+    );
+    shapes.splice(i, 1, currentShape); 
+
+  }
+  updateInputs();
+  render();
+}
+
+function calculateDerivative(curve, deltaT, pointType) {
+  let init;
+  let change;
+  let equation;
+
+  if (pointType === "start") {
+    init = 0;
+    change = deltaT;
+  }
+  if (pointType === "end") {
+    init = 1;
+    change = -1 * deltaT;
+  }
+  
+  if (curve.type === "bezier") {
+    equation = generateBezierEquation(curve);
+  } else if (curve.type === "line") {
+    equation = generateLineEquation(curve);
+  }
+  console.log(equation);
+  
+  const x1 = eval(equation.x.replace(/t/g, (init).toString()));
+  const y1 = eval(equation.y.replace(/t/g, (init).toString()));
+
+  const x2 = eval(equation.x.replace(/t/g, (init+change).toString()));
+  const y2 = eval(equation.y.replace(/t/g, (init+change).toString()));
+  
+  /*var t = init;
+  const x1 = eval(equation.x);
+  const y1 = eval(equation.y);
+
+  var t = init + change;
+  const x2 = eval(equation.x);
+  const y2 = eval(equation.y);
+  */
+
+  const deltaX = (x2 - x1) / change;
+  const deltaY = (y2 - y1) / change;
+  
+  const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+  return {
+    x: deltaX,
+    y: deltaY,
+    total: delta,
+  };
+}
+
+function adjustControlPoint(controlPoint, endPointDerivative, nextShapeStartPointDerivative, epsilon) {
+  // Adjust the control point to match the derivatives
+  if (endPointDerivative.total < nextShapeStartPointDerivative.total) {
+    controlPoint.y -= Math.abs(endPointDerivative.y - nextShapeStartPointDerivative.y) * epsilon; 
+    controlPoint.x += Math.abs(endPointDerivative.x - nextShapeStartPointDerivative.x) * epsilon;
+  } else if (endPointDerivative > nextShapeStartPointDerivative) {
+    controlPoint.y += Math.abs(endPointDerivative.y - nextShapeStartPointDerivative.y) * epsilon; 
+    controlPoint.x -= Math.abs(endPointDerivative.x - nextShapeStartPointDerivative.x) * epsilon; 
+  }
+  return controlPoint;
+}
+
 canvas.addEventListener("mousedown", function (event) {
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
@@ -382,8 +470,8 @@ function drawAxis() {
 }
 
 function generateBezierEquation(bezier) {
-  const eqX = `(1-t)^2(${bezier.startPoint.x}) + 2(1-t)t(${bezier.controlPoint.x}) + t^2(${bezier.endPoint.x})`;
-  const eqY = `(1-t)^2(${bezier.startPoint.y}) + 2(1-t)t(${bezier.controlPoint.y}) + t^2(${bezier.endPoint.y})`;
+  const eqX = `(1-t)**2 * (${bezier.startPoint.x}) + 2 * (1-t)*t*(${bezier.controlPoint.x}) + t**2 * (${bezier.endPoint.x})`;
+  const eqY = `(1-t)**2 * (${bezier.startPoint.y}) + 2 * (1-t)*t*(${bezier.controlPoint.y}) + t**2 * (${bezier.endPoint.y})`;
   return {
     x: eqX,
     y: eqY,
@@ -401,12 +489,17 @@ function generateLineEquation(line) {
     y: eqY,
   };
 }
+
 document
   .getElementById("addBezier")
   .addEventListener("click", () => addShape("bezier"));
 document
   .getElementById("addLine")
   .addEventListener("click", () => addShape("line"));
+
+document
+  .getElementById("makeSmooth")
+  .addEventListener("click", () => makeSmooth());
 
 document
   .getElementById("addCubicBezier")
