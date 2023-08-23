@@ -40,12 +40,21 @@ let beziers = [{
 
 function addBezier() {
     const lastBezier = beziers[beziers.length - 1];
-    const newEndPointX = Math.min(lastBezier.endPoint.x + 50, 72);
+
+    let newEndPoint = {
+        x: Math.min(Math.max(lastBezier.endPoint.x + 50, -72), 72),
+        y: Math.min(Math.max(lastBezier.endPoint.y, -72), 72)
+    };
+
+    let newControlPoint = {
+        x: Math.min(Math.max((lastBezier.endPoint.x + newEndPoint.x) / 2, -72), 72),
+        y: Math.min(Math.max(lastBezier.endPoint.y - 50, -72), 72)
+    };
     
     beziers.push({
         startPoint: { ...lastBezier.endPoint },
-        controlPoint: { x: (lastBezier.endPoint.x + newEndPointX) / 2, y: lastBezier.endPoint.y - 50 },
-        endPoint: { x: newEndPointX, y: lastBezier.endPoint.y }
+        controlPoint: newControlPoint,
+        endPoint: newEndPoint
     });
     
     updateInputs();
