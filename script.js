@@ -180,9 +180,11 @@ function calculateDerivative(curve, deltaT, pointType) {
 function adjustControlPoint(controlPoint, endPointDerivative, nextShapeStartPointDerivative, epsilon) {
   // Adjust the control point to match the derivatives
   if (endPointDerivative < nextShapeStartPointDerivative) {
-    controlPoint.y -= epsilon; // Decrease y
+    controlPoint.y -= epsilon; 
+    controlPoint.x += epsilon;
   } else if (endPointDerivative > nextShapeStartPointDerivative) {
-    controlPoint.y += epsilon; // Increase y
+    controlPoint.y += epsilon; 
+    controlPoint.x -= epsilon; 
   }
   return controlPoint;
 }
