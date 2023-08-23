@@ -1,17 +1,43 @@
-// JavaScript equivalent of EPointF class (same as before)
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const backgroundImage = document.getElementById("background-image");
 
-const knots = [
-    new EPointF(100, 300),
-    new EPointF(300, 100),
-    new EPointF(500, 500),
-    new EPointF(700, 300)
-];
+const knots = [];
+let controlPoints = [];
 
-const controlPoints = computeControlPoints(knots);
+const addKnotButton = document.getElementById("add-knot");
+const generateCurveButton = document.getElementById("generate-curve");
+const knotsList = document.getElementById("knots-list");
+
+addKnotButton.addEventListener("click", () => {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    addKnot(x, y);
+});
+
+generateCurveButton.addEventListener("click", () => {
+    if (knots.length >= 4) {
+        controlPoints = computeControlPoints(knots);
+        drawBezierCurve();
+    }
+});
+
+function addKnot(x, y) {
+    knots.push(new EPointF(x, y));
+    updateKnotList();
+    drawKnots();
+}
+
+function updateKnotList() {
+    knotsList.innerHTML = "";
+    knots.forEach((knot, index) => {
+        const knotDiv = document.createElement("div");
+        knotDiv.innerHTML = `<span>Knot ${index + 1}: (${knot.x.toFixed(2)}, ${knot.y.toFixed(2)})</span>`;
+        knotsList.appendChild(knotDiv);
+    });
+}
+
+// const controlPoints = computeControlPoints(knots);
 
 function drawBezierCurve() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
