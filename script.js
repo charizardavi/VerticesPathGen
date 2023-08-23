@@ -147,6 +147,7 @@ function adjustControlPoint(controlPoint, endPointDerivative, nextShapeStartPoin
   } else if (endPointDerivative > nextShapeStartPointDerivative) {
     controlPoint.y += epsilon; // Increase y
   }
+  return controlPoint;
 }
 
 canvas.addEventListener("mousedown", function (event) {
