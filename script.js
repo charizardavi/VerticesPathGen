@@ -215,7 +215,7 @@ function updateInputs() {
 
 function makeSmooth() {
   const deltaT = 0.001; // Small delta t value
-  const epsilon = 0.0001; // A small value for comparing derivatives
+  const epsilon = 10; // A small value for comparing derivatives
 
   for (let i = 1; i < shapes.length - 1; i++) {
     const currentCurve = shapes[i];
