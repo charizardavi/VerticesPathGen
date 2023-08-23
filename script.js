@@ -134,33 +134,31 @@ function makeSmooth() {
 
 function calculateDerivative(curve, deltaT, pointType) {
   if (pointType === "start") {
-    init = 0;
-    deltaT = deltaT;
+    let init = 0;
+    let change = deltaT;
   }
   if (pointType === "end") {
-    init = 1;
-    deltaT = -1 * deltaT;
+    let init = 1;
+    let change = -1 * deltaT;
   }
 
   console.log(curve.type);
-  let equation;
 
   if (curve.type === "bezier") {
-    equation = generateBezierEquation(curve);
+    let equation = generateBezierEquation(curve);
   } else if (curve.type === "line") {
-    equation = generateLineEquation(curve);
+    let equation = generateLineEquation(curve);
   }
   console.log(equation);
-  let t = init;
-  const x1 = eval(equation.x);
-  const y1 = eval(equation.y);
+  const x1 = eval(equation.x.replace(/t/g, init));
+  const y1 = eval(equation.y.replace(/t/g, init));
 
-  t = init + deltaT
-  const x2 = eval(equation.x);
-  const y2 = eval(equation.y);
+  let t = init + deltaT
+  const x2 = eval(equation.x.replace(/t/g, init+change));
+  const y2 = eval(equation.y.replace(/t/g, init+change));
 
-  const deltaX = (x2 - x1) / deltaT;
-  const deltaY = (y2 - y1) / deltaT;
+  const deltaX = (x2 - x1) / change;
+  const deltaY = (y2 - y1) / change;
 
   const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
   return delta;
