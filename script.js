@@ -154,11 +154,11 @@ function calculateDerivative(curve, deltaT, pointType) {
     equation = generateLineEquation(curve);
   }
   console.log(equation);
-  const x1 = eval(equation.x.replace(/t/g, init));
-  const y1 = eval(equation.y.replace(/t/g, init));
+  const x1 = eval(equation.x.replace(/t/g, init.toString()));
+  const y1 = eval(equation.y.replace(/t/g, init.toString()));
 
-  const x2 = eval(equation.x.replace(/t/g, init+change));
-  const y2 = eval(equation.y.replace(/t/g, init+change));
+  const x2 = eval(equation.x.replace(/t/g, (init+change).toString()));
+  const y2 = eval(equation.y.replace(/t/g, (init+change).toString()));
 
   const deltaX = (x2 - x1) / change;
   const deltaY = (y2 - y1) / change;
