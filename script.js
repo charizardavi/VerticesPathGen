@@ -252,20 +252,15 @@ function calculateDerivative(curve, deltaT, pointType) {
 }
 
 function adjustControlPoint(controlPoint, startPointDerivative, endPointDerivative, nextCurveStartPointDerivative, epsilon) {
+  let adjustedControlPoint = { ...controlPoint }; // Create a copy of the control point
+  
   // Adjust the control point to match the derivatives
   if (endPointDerivative < nextCurveStartPointDerivative) {
-    const adjustedControlPoint = {
-      x: controlPoint.x, // never have to change
-      y: controlPoint.y - epsilon // incorporate derivative values in here later
-    };
+    adjustedControlPoint.y -= epsilon; // Decrease y
   } else if (endPointDerivative > nextCurveStartPointDerivative) {
-    const adjustedControlPoint = {
-      x: controlPoint.x, // never have to change
-      y: controlPoint.y + epsilon
-    };
+    adjustedControlPoint.y += epsilon; // Increase y
   }
-  
-  return adjustedControlPoint;
+  return adjustedControlPoint; // Return the adjusted control point
 }
 
 function render() {
