@@ -1,5 +1,11 @@
 const canvas = document.getElementById('bezierCanvas');
 const ctx = canvas.getContext('2d');
+const bgImage = new Image();
+bgImage.onload = function() {
+    render();
+};
+bgImage.src = 'background.png';
+
 const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FF00FF', '#00FFFF', '#800080', '#808000', '#008080', '#800000'];
 const pointsData = document.getElementById('pointsData');
 pointsData.addEventListener('input', function(event) {
@@ -20,6 +26,7 @@ pointsData.addEventListener('input', function(event) {
         }
     }
 });
+
 
 let isDragging = false;
 let draggedBezierIndex = null;
@@ -122,6 +129,9 @@ function updateInputs() {
 
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+    
     drawAxis();
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 2;
