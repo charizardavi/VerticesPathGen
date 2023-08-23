@@ -106,12 +106,12 @@ function makeSmooth() {
   const epsilon = 10; 
 
   for (let i = 0; i < shapes.length - 1; i++) { // ignore last curve
-    const currentCurve = shapes[i];
-    const nextCurve = shapes[i + 1];
+    let currentCurve = shapes[i];
+    let nextCurve = shapes[i + 1];
 
     // Calculate relevant derivatives
-    const endPointDerivative = calculateDerivative(currentCurve, deltaT, "end");
-    const nextCurveStartPointDerivative = calculateDerivative(nextCurve, deltaT, "start");
+    let endPointDerivative = calculateDerivative(currentCurve, deltaT, "end");
+    let nextCurveStartPointDerivative = calculateDerivative(nextCurve, deltaT, "start");
 
     console.log(endPointDerivative);
     console.log(nextCurveStartPointDerivative);
@@ -138,15 +138,13 @@ function calculateDerivative(curve, deltaT, pointType) {
 }
 
 function adjustControlPoint(controlPoint, startPointDerivative, endPointDerivative, nextCurveStartPointDerivative, epsilon) {
-  let adjustedControlPoint = { ...controlPoint }; // Create a copy of the control point
   
   // Adjust the control point to match the derivatives
   if (endPointDerivative < nextCurveStartPointDerivative) {
-    adjustedControlPoint.y -= epsilon; // Decrease y
+    controlPoint.y -= epsilon; // Decrease y
   } else if (endPointDerivative > nextCurveStartPointDerivative) {
-    adjustedControlPoint.y += epsilon; // Increase y
+    controlPoint.y += epsilon; // Increase y
   }
-  return adjustedControlPoint; // Return the adjusted control point
 }
 
 canvas.addEventListener("mousedown", function (event) {
