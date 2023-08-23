@@ -153,7 +153,7 @@ function calculateDerivative(curve, deltaT, pointType) {
     
     const y1 = eval(equation.y.replace(/t/g, t));
     const y2 = eval(equation.y.replace(/t/g, t + deltaT));
-    const deltaX = (y2 - y1) / deltaT;
+    const deltaY = (y2 - y1) / deltaT;
 
     const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
   return delta;
