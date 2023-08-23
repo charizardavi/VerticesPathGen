@@ -133,7 +133,7 @@ function render() {
     ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
     
     drawAxis();
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = 'white';
     ctx.lineWidth = 2;
 
     beziers.forEach((bezier, index) => {
