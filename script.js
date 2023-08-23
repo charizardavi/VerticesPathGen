@@ -170,7 +170,7 @@ function calculateDerivative(curve, deltaT, pointType) {
   const y2 = eval(equation.y);
   */
 
-  const equationFunction = new Function('t', `return {x: ${equation.x}, y: ${equation.y}};`);
+  const equationFunction = new Function('t', `return {x: (${equation.x}), y: (${equation.y})};`);
 
   const t = init;
   const { x: x1, y: y1 } = equationFunction(t);
