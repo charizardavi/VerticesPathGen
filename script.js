@@ -130,11 +130,10 @@ function makeSmooth() {
 }
 
 function calculateDerivative(curve, deltaT, pointType) {
-  const t = pointType === "start" ? deltaT : 1 - deltaT;
-  const equation = curve.type === "bezier" ? generateBezierEquation(curve) : generateLineEquation(curve);
-  const x = eval(equation.x.replace(/t/g, t));
-  const y = eval(equation.y.replace(/t/g, t));
-  return { x, y };
+  if (pointType == "start") {
+    return 3;
+  } else if (pointType == "end") {
+    return 4;
 }
 
 function adjustControlPoint(controlPoint, startPointDerivative, endPointDerivative, nextCurveStartPointDerivative, epsilon) {
