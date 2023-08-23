@@ -3,34 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quadratic Bézier Curve</title>
+    <title>Bezier Curve Editor</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <canvas id="bezierCanvas" width="500" height="500"></canvas>
-
     <div id="controls">
-        <div>
-            <label>Start Point: </label>
-            <input type="number" id="startX" placeholder="x">
-            <input type="number" id="startY" placeholder="y">
-        </div>
-        
-        <div>
-            <label>Control Point: </label>
-            <input type="number" id="controlX" placeholder="x">
-            <input type="number" id="controlY" placeholder="y">
-        </div>
-
-        <div>
-            <label>End Point: </label>
-            <input type="number" id="endX" placeholder="x">
-            <input type="number" id="endY" placeholder="y">
-        </div>
+        <button id="addBezier">Add Bezier</button>
+        <div id="pointsData"></div>
     </div>
-
-    <div id="output">Bézier equation will appear here</div>
-
     <script src="script.js"></script>
 </body>
 </html>

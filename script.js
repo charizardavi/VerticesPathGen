@@ -1,52 +1,89 @@
 const canvas = document.getElementById('bezierCanvas');
 const ctx = canvas.getContext('2d');
+const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FF00FF', '#00FFFF', '#800080', '#808000', '#008080', '#800000'];
+const pointsData = document.getElementById('pointsData');
+pointsData.addEventListener('input', function(event) {
+    const element = event.target;
+    if (element.tagName === 'INPUT') {
+        const index = element.getAttribute('data-index');
+        const key = element.getAttribute('data-key').split('-');
+        const value = parseFloat(element.value);
 
-let isDragging = false;
-let draggedPoint;
+        if (Number.isFinite(value)) {
+            beziers[index][key[0]][key[1]] = value;
 
-// Initial values
-let startPoint = { x: -50, y: 0 };
-let controlPoint = { x: 0, y: 50 };
-let endPoint = { x: 50, y: 0 };
+            if (key[0] === 'endPoint' && key[1] === 'x' && index < beziers.length - 1) {
+                beziers[parseInt(index) + 1].startPoint.x = value;
+            }
 
-canvas.addEventListener('mousedown', function (event) {
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    if (distance({ x, y }, convertToCanvasCoords(startPoint)) < 10) {
-        isDragging = true;
-        draggedPoint = 'start';
-    } else if (distance({ x, y }, convertToCanvasCoords(controlPoint)) < 10) {
-        isDragging = true;
-        draggedPoint = 'control';
-    } else if (distance({ x, y }, convertToCanvasCoords(endPoint)) < 10) {
-        isDragging = true;
-        draggedPoint = 'end';
+            render();
+        }
     }
 });
 
-canvas.addEventListener('mousemove', function (event) {
-    if (!isDragging) return;
+let isDragging = false;
+let draggedBezierIndex = null;
+let draggedPointKey = null;
+
+let beziers = [{
+    startPoint: { x: -50, y: 0 },
+    controlPoint: { x: 0, y: 50 },
+    endPoint: { x: 50, y: 0 }
+}];
+
+function addBezier() {
+    const lastBezier = beziers[beziers.length - 1];
+    const newEndPointX = Math.min(lastBezier.endPoint.x + 50, 72);
+    
+    beziers.push({
+        startPoint: { ...lastBezier.endPoint },
+        controlPoint: { x: (lastBezier.endPoint.x + newEndPointX) / 2, y: lastBezier.endPoint.y - 50 },
+        endPoint: { x: newEndPointX, y: lastBezier.endPoint.y }
+    });
+    
+    updateInputs();
+    render();
+}
+
+canvas.addEventListener('mousedown', function(event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    for (let i = 0; i < beziers.length; i++) {
+        for (let key of ['startPoint', 'controlPoint', 'endPoint']) {
+            if (i > 0 && key === 'startPoint') continue; // Skip non-first start points as they're shared
+            if (distance({ x, y }, convertToCanvasCoords(beziers[i][key])) < 10) {
+                isDragging = true;
+                draggedBezierIndex = i;
+                draggedPointKey = key;
+                return;
+            }
+        }
+    }
+});
+
+canvas.addEventListener('mousemove', function(event) {
+    if (!isDragging || draggedBezierIndex === null) return;
 
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    if (draggedPoint === 'start') {
-        startPoint = convertToUserCoords({ x, y });
-    } else if (draggedPoint === 'control') {
-        controlPoint = convertToUserCoords({ x, y });
-    } else if (draggedPoint === 'end') {
-        endPoint = convertToUserCoords({ x, y });
+    beziers[draggedBezierIndex][draggedPointKey] = convertToUserCoords({ x, y });
+
+    if (draggedPointKey === 'endPoint' && draggedBezierIndex < beziers.length - 1) {
+        beziers[draggedBezierIndex + 1].startPoint = beziers[draggedBezierIndex].endPoint;
     }
 
+    updateInputs();
     render();
 });
 
-canvas.addEventListener('mouseup', function () {
+canvas.addEventListener('mouseup', function() {
     isDragging = false;
-    draggedPoint = null;
+    draggedBezierIndex = null;
+    draggedPointKey = null;
 });
 
 function distance(p1, p2) {
@@ -67,57 +104,64 @@ function convertToUserCoords(point) {
     };
 }
 
+function updateInputs() {
+    pointsData.innerHTML = '';  // clear current inputs
+    beziers.forEach((bezier, index) => {
+        const equation = generateBezierEquation(bezier);
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <strong>Bezier ${index + 1}</strong><br>
+            Equation: x(t) = ${equation.x}, y(t) = ${equation.y} <br>
+            Start: <input type="text" value="${bezier.startPoint.x}" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${bezier.startPoint.y}" data-index="${index}" data-key="startPoint-y"><br>
+            Control: <input type="text" value="${bezier.controlPoint.x}" data-index="${index}" data-key="controlPoint-x"> <input type="text" value="${bezier.controlPoint.y}" data-index="${index}" data-key="controlPoint-y"><br>
+            End: <input type="text" value="${bezier.endPoint.x}" data-index="${index}" data-key="endPoint-x"> <input type="text" value="${bezier.endPoint.y}" data-index="${index}" data-key="endPoint-y">
+        `;
+        pointsData.appendChild(div);
+    });
+}
+
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw the coordinate axis
     drawAxis();
-
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(...Object.values(convertToCanvasCoords(startPoint)));
-    ctx.quadraticCurveTo(...Object.values(convertToCanvasCoords(controlPoint)), ...Object.values(convertToCanvasCoords(endPoint)));
-    ctx.stroke();
 
-    ctx.fillStyle = 'red';
-    for (let point of [startPoint, controlPoint, endPoint]) {
-        const { x, y } = convertToCanvasCoords(point);
+    beziers.forEach((bezier, index) => {
         ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
-        ctx.fill();
-    }
+        ctx.moveTo(...Object.values(convertToCanvasCoords(bezier.startPoint)));
+        ctx.quadraticCurveTo(...Object.values(convertToCanvasCoords(bezier.controlPoint)), ...Object.values(convertToCanvasCoords(bezier.endPoint)));
+        ctx.stroke();
 
-    document.getElementById('output').textContent = `B(t) = (1-t)²(${startPoint.x}, ${startPoint.y}) + 2(1-t)t(${controlPoint.x}, ${controlPoint.y}) + t²(${endPoint.x}, ${endPoint.y})`;
+        ctx.fillStyle = colors[index % colors.length];
+        for (let point of [bezier.startPoint, bezier.controlPoint, bezier.endPoint]) {
+            const { x, y } = convertToCanvasCoords(point);
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    });
 }
 
 function drawAxis() {
-    ctx.strokeStyle = '#333'; // Color of the axis
-    ctx.lineWidth = 1;
-
-    // Draw x-axis
+    ctx.strokeStyle = '#aaa';
     ctx.beginPath();
     ctx.moveTo(0, canvas.height / 2);
     ctx.lineTo(canvas.width, canvas.height / 2);
-    ctx.stroke();
-
-    // Draw y-axis
-    ctx.beginPath();
     ctx.moveTo(canvas.width / 2, 0);
     ctx.lineTo(canvas.width / 2, canvas.height);
     ctx.stroke();
-
-    // Add markers on x and y axis
-    ctx.fillStyle = '#666'; // Color of the markers
-    for (let i = -72; i <= 72; i+=12) { // You can adjust the step of 12 if needed
-        if (i === 0) continue;
-        let {x, y} = convertToCanvasCoords({x: i, y: 0});
-        ctx.fillRect(x, canvas.height / 2 - 5, 1, 10); // x-axis markers
-
-        x = convertToCanvasCoords({x: 0, y: i}).x;
-        y = convertToCanvasCoords({x: i, y: 0}).y;
-        ctx.fillRect(canvas.width / 2 - 5, y, 10, 1); // y-axis markers
-    }
 }
 
+function generateBezierEquation(bezier) {
+    const eqX = `(1-t)^2(${bezier.startPoint.x}) + 2(1-t)t(${bezier.controlPoint.x}) + t^2(${bezier.endPoint.x})`;
+    const eqY = `(1-t)^2(${bezier.startPoint.y}) + 2(1-t)t(${bezier.controlPoint.y}) + t^2(${bezier.endPoint.y})`;
+    return {
+        x: eqX,
+        y: eqY
+    };
+}
+
+document.getElementById('addBezier').addEventListener('click', addBezier);
+
+updateInputs();
 render();
