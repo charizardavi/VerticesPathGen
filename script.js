@@ -120,15 +120,20 @@ function addShape(type) {
 
 function makeSmooth() {
   let deltaT = 0.001;
-  let epsilon = .01;
-  
-  for (let i = 0; i < shapes.length - 1; i++) { // ignore last curve
+  let epsilon = 0.01;
+
+  for (let i = 0; i < shapes.length - 1; i++) {
+    // ignore last curve
     let currentShape = shapes[i];
     let nextShape = shapes[i + 1];
 
     // Calculate relevant derivatives
     let endPointDerivative = calculateDerivative(currentShape, deltaT, "end");
-    let nextShapeStartPointDerivative = calculateDerivative(nextShape, deltaT, "start");
+    let nextShapeStartPointDerivative = calculateDerivative(
+      nextShape,
+      deltaT,
+      "start"
+    );
 
     console.log(endPointDerivative);
     console.log(nextShapeStartPointDerivative);
@@ -140,8 +145,7 @@ function makeSmooth() {
       nextShapeStartPointDerivative,
       epsilon
     );
-    shapes.splice(i, 1, currentShape); 
-
+    shapes.splice(i, 1, currentShape);
   }
   updateInputs();
   render();
@@ -160,20 +164,20 @@ function calculateDerivative(curve, deltaT, pointType) {
     init = 1;
     change = -1 * deltaT;
   }
-  
+
   if (curve.type === "bezier") {
     equation = generateBezierEquation(curve);
   } else if (curve.type === "line") {
     equation = generateLineEquation(curve);
   }
   console.log(equation);
-  
-  const x1 = eval(equation.x.replace(/t/g, (init).toString()));
-  const y1 = eval(equation.y.replace(/t/g, (init).toString()));
 
-  const x2 = eval(equation.x.replace(/t/g, (init+change).toString()));
-  const y2 = eval(equation.y.replace(/t/g, (init+change).toString()));
-  
+  const x1 = eval(equation.x.replace(/t/g, init.toString()));
+  const y1 = eval(equation.y.replace(/t/g, init.toString()));
+
+  const x2 = eval(equation.x.replace(/t/g, (init + change).toString()));
+  const y2 = eval(equation.y.replace(/t/g, (init + change).toString()));
+
   /*var t = init;
   const x1 = eval(equation.x);
   const y1 = eval(equation.y);
@@ -185,8 +189,8 @@ function calculateDerivative(curve, deltaT, pointType) {
 
   const deltaX = (x2 - x1) / change;
   const deltaY = (y2 - y1) / change;
-  
-  const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+
+  const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
   return {
     x: deltaX,
     y: deltaY,
@@ -194,14 +198,27 @@ function calculateDerivative(curve, deltaT, pointType) {
   };
 }
 
-function adjustControlPoint(controlPoint, endPointDerivative, nextShapeStartPointDerivative, epsilon) {
+function adjustControlPoint(
+  controlPoint,
+  endPointDerivative,
+  nextShapeStartPointDerivative,
+  epsilon
+) {
   // Adjust the control point to match the derivatives
   if (endPointDerivative.total < nextShapeStartPointDerivative.total) {
-    controlPoint.y -= Math.abs(endPointDerivative.y - nextShapeStartPointDerivative.y) * epsilon; 
-    controlPoint.x += Math.abs(endPointDerivative.x - nextShapeStartPointDerivative.x) * epsilon;
+    controlPoint.y -=
+      Math.abs(endPointDerivative.y - nextShapeStartPointDerivative.y) *
+      epsilon;
+    controlPoint.x +=
+      Math.abs(endPointDerivative.x - nextShapeStartPointDerivative.x) *
+      epsilon;
   } else if (endPointDerivative > nextShapeStartPointDerivative) {
-    controlPoint.y += Math.abs(endPointDerivative.y - nextShapeStartPointDerivative.y) * epsilon; 
-    controlPoint.x -= Math.abs(endPointDerivative.x - nextShapeStartPointDerivative.x) * epsilon; 
+    controlPoint.y +=
+      Math.abs(endPointDerivative.y - nextShapeStartPointDerivative.y) *
+      epsilon;
+    controlPoint.x -=
+      Math.abs(endPointDerivative.x - nextShapeStartPointDerivative.x) *
+      epsilon;
   }
   return controlPoint;
 }
@@ -218,7 +235,7 @@ canvas.addEventListener("mousedown", function (event) {
         : shapes[i].type === "cubicBezier"
         ? ["startPoint", "controlPoint1", "controlPoint2", "endPoint"]
         : ["startPoint", "endPoint"];
-    
+
     for (let key of keys) {
       if (i > 0 && key === "startPoint") continue;
       if (distance({ x, y }, convertToCanvasCoords(shapes[i][key])) < 10) {
@@ -281,12 +298,12 @@ function updateInputs() {
 
     if (shape.type === "bezier" && index === 0) {
       div.innerHTML = `
-                <strong>Bezier ${index + 1}</strong><br>
-                Code: Point start = new Point(${shape.startPoint.x}, ${
+                <strong>Bezier ${index + 1}</strong><br><br>
+                Code: <code>Point start = new Point(${shape.startPoint.x}, ${
         shape.startPoint.y
       }), new QuadCurve(new Point(${shape.controlPoint.x}, ${
         shape.controlPoint.y
-      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
                 Start: <input type="text" value="${
                   shape.startPoint.x
                 }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
@@ -305,12 +322,12 @@ function updateInputs() {
             `;
     } else if (shape.type === "line" && index === 0) {
       div.innerHTML = `
-                <strong>Line ${index + 1}</strong><br>
-                Code: Point start = new Point(${shape.startPoint.x}, ${
+                <strong>Line ${index + 1}</strong><br><br>
+                Code: <code>Point start = new Point(${shape.startPoint.x}, ${
         shape.startPoint.y
       }), new Line(new Point(${shape.endPoint.x}, ${
         shape.endPoint.y
-      }), time) <br>
+      }), time)</code><br>
                 Start: <input type="text" value="${
                   shape.startPoint.x
                 }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
@@ -324,12 +341,12 @@ function updateInputs() {
             `;
     } else if (shape.type === "bezier" && index != 0) {
       div.innerHTML = `
-                <strong>Bezier ${index + 1}</strong><br>
-                Code: Point start = new Point(${shape.startPoint.x}, ${
+                <strong>Bezier ${index + 1}</strong><br><br>
+                Code: <code>Point start = new Point(${shape.startPoint.x}, ${
         shape.startPoint.y
       }), new QuadCurve(new Point(${shape.controlPoint.x}, ${
         shape.controlPoint.y
-      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
                 Control: <input type="text" value="${
                   shape.controlPoint.x
                 }" data-index="${index}" data-key="controlPoint-x"> <input type="text" value="${
@@ -343,12 +360,12 @@ function updateInputs() {
             `;
     } else if (shape.type === "line" && index != 0) {
       div.innerHTML = `
-                <strong>Line ${index + 1}</strong><br>
-                Code: Point start = new Point(${shape.startPoint.x}, ${
+                <strong>Line ${index + 1}</strong><br><br>
+                Code: <code>Point start = new Point(${shape.startPoint.x}, ${
         shape.startPoint.y
       }), new Line(new Point(${shape.endPoint.x}, ${
         shape.endPoint.y
-      }), time) <br>
+      }), time)</code> <br>
 
                 End: <input type="text" value="${
                   shape.endPoint.x
@@ -358,14 +375,14 @@ function updateInputs() {
             `;
     } else if (shape.type === "cubicBezier") {
       div.innerHTML = `
-      <strong>Cubic Bezier ${index + 1}</strong><br>
-      Code: Point start = new Point(${shape.startPoint.x}, ${
+      <strong>Cubic Bezier ${index + 1}</strong><br><br>
+      Code: <code>Point start = new Point(${shape.startPoint.x}, ${
         shape.startPoint.y
       }), new CubicCurve(new Point(${shape.controlPoint1.x}, ${
         shape.controlPoint1.y
       }), new Point(${shape.controlPoint2.x}, ${
         shape.controlPoint2.y
-      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time) <br>
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
       Control1: <input type="text" value="${
         shape.controlPoint1.x
       }" data-index="${index}" data-key="controlPoint1-x"> <input type="text" value="${
@@ -506,6 +523,6 @@ document
   .addEventListener("click", function () {
     addShape("cubicBezier");
   });
-
+  
 updateInputs();
 render();

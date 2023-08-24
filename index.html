@@ -7,18 +7,17 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="bezierCanvas" width="500" height="500"></canvas>
-    <div id = "smooth">
-        <button id="makeSmooth">Make Smooth</button>
-    </div>
-    <div id="controls">
-        <button id="addBezier">Add Bezier</button>
-        <button id="addLine">Add Line</button>
-        <button id="addCubicBezier">Add Cubic Bezier</button>
-        <button onclick="updateInputs()">Get Updated Code</button>
-        
-        <div id="pointsData"></div>
-    </div>
+    <!-- <div style="display: flex;"> -->
+        <canvas id="bezierCanvas" width="500" height="500"></canvas>
+        <div id="controls">
+            <button id="addBezier">Add Bezier</button>
+            <button id="addLine">Add Line</button>
+            <button id="addCubicBezier">Add Cubic Bezier</button>
+            <button onclick="updateInputs()">Get Updated Code</button>
+            <button id="makeSmooth">Make Smooth</button>
+            <div id="pointsData" style="width: 100%;"></div> <!-- Added style for 100% width -->
+        </div>
+    <!-- </div> -->
     <script src="script.js"></script>
 </body>
 </html>
