@@ -1,5 +1,6 @@
 {
   "name": "verticespathgen",
+  "productName": "Vertices Path Generator",
   "version": "1.0.0",
   "description": "The offical Vertices Path Generation Software",
   "main": "main.js",
