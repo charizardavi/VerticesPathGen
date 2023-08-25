@@ -59,16 +59,25 @@ let draggedShapeIndex = null; // renamed for clarity
 let draggedPointKey = null;
 
 let shapes = [
-  {
-    type: "bezier",
-    startPoint: { x: -50, y: 0 },
-    controlPoint: { x: 0, y: 50 },
-    endPoint: { x: 50, y: 0 },
-  },
+  // {
+  //   type: "bezier",
+  //   startPoint: { x: -50, y: 0 },
+  //   controlPoint: { x: 0, y: 50 },
+  //   endPoint: { x: 50, y: 0 },
+  // },
 ];
 
 function addShape(type) {
-  const lastShape = shapes[shapes.length - 1];
+  let lastShape = shapes[shapes.length - 1];
+  if (shapes.length === 0){
+    lastShape =   {
+        type: "bezier",
+        startPoint: { x: -50, y: 0 },
+        controlPoint: { x: 0, y: 50 },
+        endPoint: { x: 50, y: 0 },
+      }
+  }
+
   let newEndPoint = {
     x: Math.min(Math.max(lastShape.endPoint.x + 50, -72), 72),
     y: Math.min(Math.max(lastShape.endPoint.y, -72), 72),
@@ -526,3 +535,12 @@ document
   
 updateInputs();
 render();
+
+
+function removeLast(){
+  if (shapes.length != 0){
+    shapes = shapes.slice(0, shapes.length-1);
+  }
+  updateInputs();
+  render();
+}
