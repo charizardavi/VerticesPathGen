@@ -382,7 +382,7 @@ function updateInputs() {
         shape.endPoint.y
       }" data-index="${index}" data-key="endPoint-y">
             `;
-    } else if (shape.type === "cubicBezier") {
+    } else if (shape.type === "cubicBezier" && index !=0) {
       div.innerHTML = `
       <strong>Cubic Bezier ${index + 1}</strong><br><br>
       Code: <code>Point start = new Point(${shape.startPoint.x}, ${
@@ -392,6 +392,38 @@ function updateInputs() {
       }), new Point(${shape.controlPoint2.x}, ${
         shape.controlPoint2.y
       }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
+      Control1: <input type="text" value="${
+        shape.controlPoint1.x
+      }" data-index="${index}" data-key="controlPoint1-x"> <input type="text" value="${
+        shape.controlPoint1.y
+      }" data-index="${index}" data-key="controlPoint1-y"><br>
+      Control2: <input type="text" value="${
+        shape.controlPoint2.x
+      }" data-index="${index}" data-key="controlPoint2-x"> <input type="text" value="${
+        shape.controlPoint2.y
+      }" data-index="${index}" data-key="controlPoint2-y"><br>
+      End: <input type="text" value="${
+        shape.endPoint.x
+      }" data-index="${index}" data-key="endPoint-x"> <input type="text" value="${
+        shape.endPoint.y
+      }" data-index="${index}" data-key="endPoint-y">
+      `;
+    }
+    else if (shape.type === "cubicBezier" && index === 0) {
+      div.innerHTML = `
+      <strong>Cubic Bezier ${index + 1}</strong><br><br>
+      Code: <code>Point start = new Point(${shape.startPoint.x}, ${
+        shape.startPoint.y
+      }), new CubicCurve(new Point(${shape.controlPoint1.x}, ${
+        shape.controlPoint1.y
+      }), new Point(${shape.controlPoint2.x}, ${
+        shape.controlPoint2.y
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
+      Start: <input type="text" value="${
+        shape.startPoint.x
+      }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
+shape.startPoint.y
+}" data-index="${index}" data-key="startPoint-y"><br>
       Control1: <input type="text" value="${
         shape.controlPoint1.x
       }" data-index="${index}" data-key="controlPoint1-x"> <input type="text" value="${
