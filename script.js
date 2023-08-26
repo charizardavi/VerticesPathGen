@@ -59,12 +59,6 @@ let draggedShapeIndex = null; // renamed for clarity
 let draggedPointKey = null;
 
 let shapes = [
-  // {
-  //   type: "bezier",
-  //   startPoint: { x: -50, y: 0 },
-  //   controlPoint: { x: 0, y: 50 },
-  //   endPoint: { x: 50, y: 0 },
-  // },
 ];
 
 function addShape(type) {
@@ -598,3 +592,71 @@ function removeLast(){
   updateInputs();
   render();
 }
+
+function onShapeDataChanged() {
+  updateInputs();
+  render();
+  const permalink = generatePermalink();
+  // Do something with permalink, like updating a link or displaying it
+}
+
+// Function to generate permalink
+function generatePermalink() {
+  const serializedShapes = encodeURIComponent(JSON.stringify(shapes));
+  // const permalink = `${window.location.origin}${window.location.pathname}?data=${serializedShapes}`;
+  const permalink = `https://verticespathgen.vercel.app?data=${serializedShapes}`;
+
+  return permalink;
+}
+
+// Function to load from permalink
+function loadFromPermalink() {
+  const params = new URLSearchParams(window.location.search);
+  const serializedShapes = params.get('data');
+  if (serializedShapes) {
+    try {
+      shapes = JSON.parse(decodeURIComponent(serializedShapes));
+      updateInputs();
+      render();
+    } catch (error) {
+      console.error("Failed to load from permalink:", error);
+    }
+  }
+}
+
+// Function to export permalink
+function exportPermalink() {
+  const permalink = generatePermalink();
+  navigator.clipboard.writeText(permalink).then(() => {
+    alert('Permalink copied to clipboard');
+  });
+}
+
+loadFromPermalink();
+
+document.getElementById("loadFromInput").addEventListener("click", function() {
+  const input = document.getElementById("permalinkInput").value;
+
+  if (input) {
+    try {
+      const url = new URL(input);
+      const params = new URLSearchParams(url.search);
+      const serializedShapes = params.get('data');
+      
+      if (serializedShapes) {
+        // shapes = JSON.parse(atob(serializedShapes)); // If  Base64 encoding
+
+        shapes = JSON.parse(decodeURIComponent(serializedShapes)); // If URL encoding
+
+        updateInputs();
+        render();
+      } else {
+        alert("Invalid URL: No data parameter found.");
+      }
+    } catch (error) {
+      alert("An error occurred: " + error.toString());
+    }
+  } else {
+    alert("Please paste a URL in the text box.");
+  }
+});

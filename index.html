@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- <div style="display: flex;"> -->
         <canvas id="bezierCanvas" width="500" height="500"></canvas>
         <div id="controls">
             <button id="addBezier">Add Bezier</button>
@@ -16,9 +15,11 @@
             <button onclick="removeLast()">Remove last curve</button>
             <button onclick="updateInputs()">Get Updated Code</button>
             <button id="makeSmooth">Make Smooth</button>
+            <button id="makeSmooth" onclick="exportPermalink()">Copy Link</button>
+            <input type="text" id="permalinkInput" placeholder="Paste URL">
+            <button id="loadFromInput">Load URL</button>
             <div id="pointsData" style="width: 100%;"></div> <!-- Added style for 100% width -->
         </div>
-    <!-- </div> -->
     <script src="script.js"></script>
 </body>
 </html>
