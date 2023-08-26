@@ -518,6 +518,7 @@ function render() {
 }
 
 function drawAxis() {
+  // Draw the axes lines
   ctx.strokeStyle = "#aaa";
   ctx.beginPath();
   ctx.moveTo(0, canvas.height / 2);
@@ -525,7 +526,28 @@ function drawAxis() {
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
   ctx.stroke();
+
+  // Add labels for the axes
+  ctx.font = '13px Arial';
+  ctx.fillStyle = 'white';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Labels for x-axis
+  ctx.fillText('+X', canvas.width - 10, canvas.height / 2 - 20);
+  ctx.fillText('-X', 10, canvas.height / 2 - 20);
+
+  // Labels for y-axis
+  ctx.fillText('+Y', canvas.width / 2 + 20, 10);
+  ctx.fillText('-Y', canvas.width / 2 + 20, canvas.height - 10);
+
+  // Degree labels
+  ctx.fillText('0°', canvas.width - 10, canvas.height / 2 + 20);
+  ctx.fillText('180°', 17, canvas.height / 2 + 20);
+  ctx.fillText('90°', canvas.width / 2 + 20, 30);
+  ctx.fillText('270°', canvas.width / 2 + 20, canvas.height - 30);
 }
+
 
 function generateBezierEquation(bezier) {
   const eqX = `(1-t)**2 * (${bezier.startPoint.x}) + 2 * (1-t)*t*(${bezier.controlPoint.x}) + t**2 * (${bezier.endPoint.x})`;
