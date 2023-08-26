@@ -28,7 +28,28 @@ const colors = [
   "#D2691E", // Chocolate
   "#B0E0E6", // PowderBlue
   "#20B2AA", // LightSeaGreen
+  "#7FFF00", // Chartreuse
+  "#DB7093", // PaleVioletRed
+  "#ADFF2F", // GreenYellow
+  "#FF4500", // OrangeRed
+  "#2E8B57", // SeaGreen
+  "#FF6347", // Tomato
+  "#4169E1", // RoyalBlue
+  "#8A2BE2", // BlueViolet
+  "#7B68EE", // MediumSlateBlue
+  "#4682B4", // SteelBlue
+  "#D2B48C", // Tan
+  "#DDA0DD", // Plum
+  "#BC8F8F", // RosyBrown
+  "#5F9EA0", // CadetBlue
+  "#A52A2A", // Brown
+  "#B22222", // FireBrick
+  "#228B22", // ForestGreen
+  "#8B008B", // DarkMagenta
+  "#FF1493", // DeepPink
+  "#CD5C5C", // IndianRed
 ];
+
 const pointsData = document.getElementById("pointsData");
 
 pointsData.addEventListener("input", function (event) {

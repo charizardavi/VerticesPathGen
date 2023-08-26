@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="container">
         <canvas id="bezierCanvas" width="500" height="500"></canvas>
         <div id="controls">
             <button id="addBezier">Add Bezier</button>
@@ -18,8 +19,9 @@
             <button id="makeSmooth" onclick="exportPermalink()">Copy Link</button>
             <input type="text" id="permalinkInput" placeholder="Paste URL">
             <button id="loadFromInput">Load URL</button>
-            <div id="pointsData" style="width: 100%;"></div> <!-- Added style for 100% width -->
+            <div id="pointsData" style="width: 100%;"></div>
         </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
