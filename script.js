@@ -487,7 +487,7 @@ function render() {
       ]) {
         const { x, y } = convertToCanvasCoords(point);
         ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.arc(x, y, 8, 0, 2 * Math.PI);
         ctx.fill();
       }
     } else if (shape.type === "line") {
@@ -499,12 +499,12 @@ function render() {
       ctx.fillStyle = colors[index % colors.length];
       const { x: startX, y: startY } = convertToCanvasCoords(shape.startPoint);
       ctx.beginPath();
-      ctx.arc(startX, startY, 5, 0, 2 * Math.PI);
+      ctx.arc(startX, startY, 8, 0, 2 * Math.PI);
       ctx.fill();
 
       const { x: endX, y: endY } = convertToCanvasCoords(shape.endPoint);
       ctx.beginPath();
-      ctx.arc(endX, endY, 5, 0, 2 * Math.PI);
+      ctx.arc(endX, endY, 8, 0, 2 * Math.PI);
       ctx.fill();
     } else if (shape.type === "cubicBezier") {
       ctx.beginPath();
@@ -525,7 +525,7 @@ function render() {
       ]) {
         const { x, y } = convertToCanvasCoords(point);
         ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.arc(x, y, 8, 0, 2 * Math.PI);
         ctx.fill();
       }
     }
