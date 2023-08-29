@@ -327,7 +327,7 @@ function updateInputs() {
         shape.startPoint.y
       }), new QuadCurve(new Point(${shape.controlPoint.x}, ${
         shape.controlPoint.y
-      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), PATH_TIME_HERE)</code> <br>
                 Start: <input type="text" value="${
                   shape.startPoint.x
                 }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
@@ -351,7 +351,7 @@ function updateInputs() {
         shape.startPoint.y
       }), new Line(new Point(${shape.endPoint.x}, ${
         shape.endPoint.y
-      }), time)</code><br>
+      }), PATH_TIME_HERE)</code><br>
                 Start: <input type="text" value="${
                   shape.startPoint.x
                 }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
@@ -370,7 +370,7 @@ function updateInputs() {
         shape.startPoint.y
       }), new QuadCurve(new Point(${shape.controlPoint.x}, ${
         shape.controlPoint.y
-      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), PATH_TIME_HERE)</code> <br>
                 Control: <input type="text" value="${
                   shape.controlPoint.x
                 }" data-index="${index}" data-key="controlPoint-x"> <input type="text" value="${
@@ -389,7 +389,7 @@ function updateInputs() {
         shape.startPoint.y
       }), new Line(new Point(${shape.endPoint.x}, ${
         shape.endPoint.y
-      }), time)</code> <br>
+      }), PATH_TIME_HERE)</code> <br>
 
                 End: <input type="text" value="${
                   shape.endPoint.x
@@ -406,7 +406,7 @@ function updateInputs() {
         shape.controlPoint1.y
       }), new Point(${shape.controlPoint2.x}, ${
         shape.controlPoint2.y
-      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), PATH_TIME_HERE)</code> <br>
       Control1: <input type="text" value="${
         shape.controlPoint1.x
       }" data-index="${index}" data-key="controlPoint1-x"> <input type="text" value="${
@@ -433,7 +433,7 @@ function updateInputs() {
         shape.controlPoint1.y
       }), new Point(${shape.controlPoint2.x}, ${
         shape.controlPoint2.y
-      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), time)</code> <br>
+      }), new Point(${shape.endPoint.x}, ${shape.endPoint.y}), PATH_TIME_HERE)</code> <br>
       Start: <input type="text" value="${
         shape.startPoint.x
       }" data-index="${index}" data-key="startPoint-x"> <input type="text" value="${
