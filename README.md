@@ -8,7 +8,7 @@ Features:
 - Path smoothening
 - One-click path sharing, compatible with the desktop app
 
-Use it at https://verticespathgen.vercel.app or download the desktop app from the releases page or build it locally with the following commands:
+Use it at https://vertices-path-gen.vercel.app or download the desktop app from the releases page or build it locally with the following commands:
 ```
 npm install
 npm run make
