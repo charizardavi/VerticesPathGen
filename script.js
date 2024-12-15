@@ -626,7 +626,7 @@ function onShapeDataChanged() {
 function generatePermalink() {
   const serializedShapes = encodeURIComponent(JSON.stringify(shapes));
   // const permalink = `${window.location.origin}${window.location.pathname}?data=${serializedShapes}`;
-  const permalink = `https://verticespathgen.vercel.app?data=${serializedShapes}`;
+  const permalink = `https://vertices-path-gen.vercel.app?data=${serializedShapes}`;
 
   return permalink;
 }
